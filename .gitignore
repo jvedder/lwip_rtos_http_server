@@ -1,0 +1,5 @@
+#ignore the Setting Folder
+.settings/
+
+#ignore the build output folder
+Debug/
