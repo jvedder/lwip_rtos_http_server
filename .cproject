@@ -3,6 +3,9 @@
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1536882161">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1536882161" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+				<macros>
+					<stringMacro name="LibraryDirPath" type="VALUE_TEXT" value="${WorkspaceDirPath}/STM32Cube_FW_F4_V1.19.0"/>
+				</macros>
 				<externalSettings/>
 				<extensions>
 					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
@@ -33,20 +36,20 @@
 								<option defaultValue="gnu.c.optimization.level.none" id="fr.ac6.managedbuild.gnu.c.compiler.option.optimization.level.1399434504" name="Optimization Level" superClass="fr.ac6.managedbuild.gnu.c.compiler.option.optimization.level" useByScannerDiscovery="false" value="fr.ac6.managedbuild.gnu.c.optimization.level.size" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.debugging.level.1008137772" name="Debug Level" superClass="gnu.c.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
 								<option id="gnu.c.compiler.option.include.paths.111974555" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/my_lwip_http_server_rtos/inc"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/my_lwip_http_server_rtos/src"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Drivers/CMSIS/Device/ST/STM32F4xx/Include"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Drivers/STM32F4xx_HAL_Driver/Inc"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Drivers/BSP/STM32F4xx_Nucleo_144"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Drivers/BSP/Components/Common"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Middlewares/Third_Party/LwIP/src/include"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Middlewares/Third_Party/LwIP/system"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Middlewares/Third_Party/FreeRTOS/Source/include"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Utilities"/>
-									<listOptionValue builtIn="false" value="/home/john/code/stm32/STM32Cube_FW_F4_V1.19.0/Utilities/Log"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/src&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Drivers/CMSIS/Device/ST/STM32F4xx/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Drivers/CMSIS/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Drivers/STM32F4xx_HAL_Driver/Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Drivers/BSP/STM32F4xx_Nucleo_144&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Drivers/BSP/Components/Common&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Middlewares/Third_Party/FreeRTOS/Source/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Utilities&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Utilities/Log&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Middlewares/Third_Party/LwIP/src/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${LibraryDirPath}/Middlewares/Third_Party/LwIP/system&quot;"/>
 								</option>
 								<option id="gnu.c.compiler.option.preprocessor.def.symbols.1743002156" name="Defined symbols (-D)" superClass="gnu.c.compiler.option.preprocessor.def.symbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>

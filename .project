@@ -364,7 +364,7 @@
 	<variableList>
 		<variable>
 			<name>LIB_LOC</name>
-			<value>$%7BPARENT-1-PROJECT_LOC%7D/STM32Cube_FW_F4_V1.19.0</value>
+			<value>$%7BWORKSPACE_LOC%7D/STM32Cube_FW_F4_V1.19.0</value>
 		</variable>
 	</variableList>
 </projectDescription>
