@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright © 2017 STMicroelectronics International N.V. 
+  * <h2><center>&copy; Copyright ï¿½ 2017 STMicroelectronics International N.V. 
   * All rights reserved.</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -88,6 +88,7 @@ For more details about this application, refer to UM1713 "STM32Cube interfacing 
   - LwIP/LwIP_HTTP_Server_Netconn_RTOS/Inc/lwipopts.h                      LwIP stack configuration options
   - LwIP/LwIP_HTTP_Server_Netconn_RTOS/Inc/FreeRTOSConfig.h                FreeRTOS configuration options
   - LwIP/LwIP_HTTP_Server_Netconn_RTOS/Inc/httpserver-netconn.h            header for httpserver-netconn.c
+  
   - LwIP/LwIP_HTTP_Server_Netconn_RTOS/Src/app_ethernet.c                  Ethernet specific module
   - LwIP/LwIP_HTTP_Server_Netconn_RTOS/Src/stm32f4xx_it.c                  STM32 interrupt handlers
   - LwIP/LwIP_HTTP_Server_Netconn_RTOS/Src/main.c                          Main program
