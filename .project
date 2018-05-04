@@ -360,6 +360,11 @@
 			<type>1</type>
 			<locationURI>LIB_LOC/Middlewares/Third_Party/LwIP/src/apps/httpd/httpd.c</locationURI>
 		</link>
+		<link>
+			<name>lib/Middlewares/LwIP/apps/mqtt/mqtt.c</name>
+			<type>1</type>
+			<locationURI>LIB_LOC/Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c</locationURI>
+		</link>
 	</linkedResources>
 	<variableList>
 		<variable>

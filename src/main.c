@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright © 2017 STMicroelectronics International N.V. 
+  * <h2><center>&copy; Copyright ï¿½ 2017 STMicroelectronics International N.V. 
   * All rights reserved.</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -52,6 +52,7 @@
 #include "lwip/tcpip.h"
 #include "app_ethernet.h"
 #include "httpserver-netconn.h"
+#include "mqtt_client.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -114,8 +115,11 @@ static void StartThread(void const * argument)
   Netif_Config();
   
   /* Initialize webserver demo */
-  http_server_netconn_init();
+  //http_server_netconn_init();
   
+  /* Initialize mqtt client example */
+  mqtt_client_init();
+
   /* Notify user about the network interface config */
   User_notification(&gnetif);
   
