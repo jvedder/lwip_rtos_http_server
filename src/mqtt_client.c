@@ -5,6 +5,7 @@
   * @brief   Basic http server implementation using LwIP netconn API
   ******************************************************************************
 */
+
 /* Includes ------------------------------------------------------------------*/
 #include "cmsis_os.h"
 #include "string.h"
@@ -17,12 +18,12 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define MQTT_CLIENT_THREAD_PRIO    ( osPriorityAboveNormal )
+#define MQTT_CLIENT_THREAD_PRIO    ( osPriorityNormal )
 
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-//static u32_t nPubCounter = 0;
+static u32_t nPubCounter = 0;
 static mqtt_client_t mqtt_client;
 
 /* Taproom.lan = 192.168.1.107 = 0xC0A80168UL */
@@ -58,9 +59,15 @@ static void example_connect(mqtt_client_t *client)
   /* Minimal amount of information required is client identifier, so set it here */
   ci.client_id = "lwip_mqtt_test";
 
-  /* taproom.lan = 192.168.1.107 = 0xC0A80168UL */
-  mqtt_server_ip_addr.addr = (u32_t) 0xC0A80168UL;
-  //IP_ADDR4(&mqtt_server_ip_addr, 192,168,1,107);
+
+  /*
+   * Note: Byte order of IP address is reversed
+   */
+  /* taproom.lan = 192.168.1.107 = 0x C0.A8.01.6B */
+  mqtt_server_ip_addr.addr = (u32_t) 0x6B01A8C0UL;
+  /* jolt.lan = 192.168.1.30 = 0x CO.A8.01.1E */
+//  mqtt_server_ip_addr.addr = (u32_t) 0x1E01A8C0UL;
+
 
   /* Initiate client and connect to server, if this fails immediately an error code is returned
      otherwise mqtt_connection_cb will be called with connection result after attempting
@@ -87,7 +94,7 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
     /* Setup callback for incoming publish requests */
     mqtt_set_inpub_callback(client, mqtt_incoming_publish_cb, mqtt_incoming_data_cb, arg);
 
-    /* Subscribe to a topic named "subtopic" with QoS level 1, call mqtt_sub_request_cb with result */
+    /* Subscribe to a topic named "sub_topic" with QoS level 1, call mqtt_sub_request_cb with result */
     err = mqtt_subscribe(client, "test/sub_topic", 1, mqtt_sub_request_cb, arg);
 
     if(err != ERR_OK) {
@@ -175,11 +182,18 @@ static void mqtt_pub_request_cb(void *arg, err_t result)
  */
 static void example_publish(mqtt_client_t *client, void *arg)
 {
-  const char *pub_payload= "PubTestData";
+  char pub_payload[40];
+
+  nPubCounter++;
+  sprintf(pub_payload, "PubData: 0x%X", nPubCounter);
+  //const char *pub_payload= "PubTestData";
+
   err_t err;
   u8_t qos = 2; /* 0 1 or 2, see MQTT specification */
-  u8_t retain = 0; /* No don't retain such crappy payload... */
+  u8_t retain = 0; /* No don't retain the payload... */
+
   err = mqtt_publish(client, "test/pub_topic", pub_payload, strlen(pub_payload), qos, retain, mqtt_pub_request_cb, arg);
+
   if(err != ERR_OK) {
     printf("Publish err: %d\n", err);
   }
@@ -207,6 +221,8 @@ static void mqtt_client_thread(void *arg)
 
   while(1)
   {
+	  vTaskDelay(100);
+
 	  /* while connected, publish every second */
 	  if(mqtt_client_is_connected(&mqtt_client))
 	  {
@@ -230,6 +246,6 @@ static void mqtt_client_thread(void *arg)
   */
 void mqtt_client_init()
 {
-  sys_thread_new("HTTP", mqtt_client_thread, NULL, DEFAULT_THREAD_STACKSIZE, MQTT_CLIENT_THREAD_PRIO);
+  sys_thread_new("MQTT", mqtt_client_thread, NULL, DEFAULT_THREAD_STACKSIZE, MQTT_CLIENT_THREAD_PRIO);
 }
 

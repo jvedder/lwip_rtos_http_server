@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright © 2017 STMicroelectronics International N.V. 
+  * <h2><center>&copy; Copyright ï¿½ 2017 STMicroelectronics International N.V. 
   * All rights reserved.</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -63,8 +63,8 @@
 /*Static IP ADDRESS*/
 #define IP_ADDR0   (uint8_t) 192
 #define IP_ADDR1   (uint8_t) 168
-#define IP_ADDR2   (uint8_t) 0
-#define IP_ADDR3   (uint8_t) 10
+#define IP_ADDR2   (uint8_t) 1
+#define IP_ADDR3   (uint8_t) 152
    
 /*NETMASK*/
 #define NETMASK_ADDR0   (uint8_t) 255
@@ -75,7 +75,7 @@
 /*Gateway Address*/
 #define GW_ADDR0   (uint8_t) 192
 #define GW_ADDR1   (uint8_t) 168
-#define GW_ADDR2   (uint8_t) 0
+#define GW_ADDR2   (uint8_t) 1
 #define GW_ADDR3   (uint8_t) 1 
 
 /* Exported macro ------------------------------------------------------------*/
