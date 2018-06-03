@@ -221,7 +221,7 @@ static void mqtt_client_thread(void *arg)
 
   while(1)
   {
-	  vTaskDelay(100);
+	  vTaskDelay(1000);
 
 	  /* while connected, publish every second */
 	  if(mqtt_client_is_connected(&mqtt_client))
