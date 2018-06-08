@@ -48,6 +48,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "ethernetif.h"
+#include "uart_if.h"
 #include "lwip/netif.h"
 #include "lwip/tcpip.h"
 #include "app_ethernet.h"
@@ -108,6 +109,9 @@ int main(void)
   */
 static void StartThread(void const * argument)
 {
+  /* Start the UART */
+  uart_if_init();
+
   /* Create tcp_ip stack thread */
   tcpip_init(NULL, NULL);
   

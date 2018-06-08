@@ -1,12 +1,12 @@
 /**
   ******************************************************************************
-  * @file    LwIP/LwIP_HTTP_Server_Netconn_RTOS/Inc/main.h 
+  * @file    ethernetif.h
   * @author  MCD Application Team
-  * @brief   Header for main.c module
+  * @brief   Ethernet interface header file.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright � 2017 STMicroelectronics International N.V. 
+  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics International N.V. 
   * All rights reserved.</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -42,52 +42,30 @@
   *
   ******************************************************************************
   */
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __MAIN_H
-#define __MAIN_H
 
-#ifdef __cplusplus
- extern "C" {
-#endif
+#ifndef __UART_IF_H__
+#define __UART_IF_H__
 
-/* Includes ------------------------------------------------------------------*/
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx_nucleo_144.h"
-   
-#include "cmsis_os.h"
-
+/* Exported defines ----------------------------------------------------------*/
+ /* BSP Definitions */
+#define USER_Btn_Pin GPIO_PIN_13
+#define USER_Btn_GPIO_Port GPIOC
+#define GRN_LED_Pin GPIO_PIN_0
+#define GRN_LED_GPIO_Port GPIOB
+#define RED_LED_Pin GPIO_PIN_14
+#define RED_LED_GPIO_Port GPIOB
+#define BLUE_LED_Pin GPIO_PIN_7
+#define BLUE_LED_GPIO_Port GPIOB
+#define STLINK_RX_Pin GPIO_PIN_8
+#define STLINK_RX_GPIO_Port GPIOD
+#define STLINK_TX_Pin GPIO_PIN_9
+#define STLINK_TX_GPIO_Port GPIOD
 /* Exported types ------------------------------------------------------------*/
-/* Exported constants --------------------------------------------------------*/ 
-#define USE_DHCP       /* enable DHCP, if disabled static address is used*/
- 
-/*Static IP ADDRESS*/
-#define IP_ADDR0   (uint8_t) 192
-#define IP_ADDR1   (uint8_t) 168
-#define IP_ADDR2   (uint8_t) 1
-#define IP_ADDR3   (uint8_t) 152
-   
-/*NETMASK*/
-#define NETMASK_ADDR0   (uint8_t) 255
-#define NETMASK_ADDR1   (uint8_t) 255
-#define NETMASK_ADDR2   (uint8_t) 255
-#define NETMASK_ADDR3   (uint8_t) 0
 
-/*Gateway Address*/
-#define GW_ADDR0   (uint8_t) 192
-#define GW_ADDR1   (uint8_t) 168
-#define GW_ADDR2   (uint8_t) 1
-#define GW_ADDR3   (uint8_t) 1 
+/* Exported variables---------------------------------------------------------*/
+
+/* Exported functions ------------------------------------------------------- */
+void uart_if_init(void);
 
 
-/* Exported macro ------------------------------------------------------------*/
-/* Exported functions ------------------------------------------------------- */  
-
-
-#ifdef __cplusplus
-}
 #endif
-
-#endif /* __MAIN_H */
-
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
