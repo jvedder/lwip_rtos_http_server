@@ -59,7 +59,8 @@ static QueueHandle_t xUartQueue;
 static volatile int dma_complete = 0;
 static int counter = 0;
 static int8_t ucUartTxBuffer[ UART_LINE_LENGTH ];
-static int8_t ucUartTxBuffer2[ UART_LINE_LENGTH ];
+static int8_t ucUartStuffBuffer[ UART_LINE_LENGTH ];
+static int8_t ucUartTempBuffer[ UART_LINE_LENGTH ];
 
 /* Private function prototypes -----------------------------------------------*/
 static void MX_NVIC_Init(void);
@@ -201,11 +202,11 @@ static void uart_stuff_tx_thread(void *arg)
 {
   while(1)
   {
-	  vTaskDelay(100);
+	  vTaskDelay(1000);
 
 	  counter++;
-	  sprintf( (char *) ucUartTxBuffer2, "TX: %d\r\n", counter );
-	  uart_send( ucUartTxBuffer2 );
+	  sprintf( (char *) ucUartStuffBuffer, "Stuff: %d", counter );
+	  uart_send( ucUartStuffBuffer );
   }
 }
 
@@ -245,14 +246,36 @@ void uart_init(void)
 }
 
 /**
-  * @brief  Adds a line of text to the UART queu to be transmitted by the UART_TX thread.
+  * @brief  Adds a line of text to the UART queue to be transmitted by the UART_TX thread.
+  * A "/r/n" sequence is added to the line
   *
   * @param  line: the line of text to be sent. Should include "/r/n" and terminating zero.
   * @retval TRUE if the item was successfully queued, otherwise FALSE
   */
 BaseType_t uart_send(int8_t line[])
 {
-	BaseType_t ok = xQueueSend(xUartQueue, (const void *) line, UNQUEUE_TICKS_TO_WAIT );
+	//TODO: Find a cleaner way to handle short lines than copying into a temp buffer
+	int i;
+
+	// leave 3 char at end for "/r/n/0"
+	for(i = 0; (i < (UART_LINE_LENGTH-3) ) && line[i]; i++)
+	{
+		ucUartTempBuffer[i] = line[i];
+	}
+	// append the "\r\n"
+	ucUartTempBuffer[i] = '\r';
+	i++;
+	ucUartTempBuffer[i] = '\n';
+	i++;
+
+	// zero-fill the remainder of the buffer
+	for( ; i < UART_LINE_LENGTH; i++)
+	{
+		ucUartTempBuffer[i] = 0;
+	}
+
+
+	BaseType_t ok = xQueueSend(xUartQueue, (const void *) ucUartTempBuffer, UNQUEUE_TICKS_TO_WAIT );
 	return (ok == pdTRUE);
 }
 

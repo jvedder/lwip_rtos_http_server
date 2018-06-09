@@ -46,6 +46,8 @@
 #ifndef __UART_H__
 #define __UART_H__
 
+#include "main.h"
+
 /* Exported defines ----------------------------------------------------------*/
 #define UART_QUEUE_LENGTH    10
 #define UART_LINE_LENGTH     64

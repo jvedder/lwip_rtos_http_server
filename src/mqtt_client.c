@@ -13,6 +13,7 @@
 #include "lwip/ip4_addr.h"
 #include "lwip/apps/mqtt.h"
 #include "lwip/apps/mqtt_opts.h"
+#include "uart.h"
 
 #include "mqtt_client.h"
 
@@ -25,6 +26,7 @@
 /* Private variables ---------------------------------------------------------*/
 static u32_t nPubCounter = 0;
 static mqtt_client_t mqtt_client;
+static char pub_payload[40];
 
 /* Taproom.lan = 192.168.1.107 = 0xC0A80168UL */
 static ip_addr_t mqtt_server_ip_addr; // = IPADDR4_INIT_BYTES(192,168,1,107);
@@ -74,6 +76,8 @@ static void example_connect(mqtt_client_t *client)
      to establish a connection with the server.
      For now MQTT version 3.1.1 is always used */
 
+  uart_send((int8_t *)&"MQTT_CONNECTING");
+
   err = mqtt_client_connect(client, &mqtt_server_ip_addr, MQTT_PORT, mqtt_connection_cb, NULL, &ci);
 
   /* For now just print the result code if something goes wrong */
@@ -90,6 +94,7 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
   err_t err;
   if(status == MQTT_CONNECT_ACCEPTED) {
     printf("mqtt_connection_cb: Successfully connected\n");
+    uart_send((int8_t *)&"MQTT_CONNECTED");
 
     /* Setup callback for incoming publish requests */
     mqtt_set_inpub_callback(client, mqtt_incoming_publish_cb, mqtt_incoming_data_cb, arg);
@@ -182,8 +187,6 @@ static void mqtt_pub_request_cb(void *arg, err_t result)
  */
 static void example_publish(mqtt_client_t *client, void *arg)
 {
-  char pub_payload[40];
-
   nPubCounter++;
   sprintf(pub_payload, "PubData: 0x%X", (unsigned int) nPubCounter);
   //const char *pub_payload= "PubTestData";
@@ -197,6 +200,7 @@ static void example_publish(mqtt_client_t *client, void *arg)
   if(err != ERR_OK) {
     printf("Publish err: %d\n", err);
   }
+  uart_send(pub_payload);
 }
 
 
