@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file           : uart_if.c
+  * @file           : uart.c
   * @brief          : UART API and HAL Interface
   ******************************************************************************
   ** This notice applies to any and all portions of this file
@@ -38,22 +38,28 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_hal.h"
-#include "uart_if.h"
 #include "lwip/api.h"
+#include "queue.h"
+#include "uart.h"
 #include <string.h>
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define UART_TX_THREAD_PRIO    ( osPriorityNormal )
+#define UNQUEUE_TICKS_TO_WAIT		0
 
-/* Private variables ---------------------------------------------------------*/
+/* Public variables-----------------------------------------------------------*/
 UART_HandleTypeDef huart3;
-DMA_HandleTypeDef hdma_usart3_tx;
+DMA_HandleTypeDef  hdma_usart3_tx;
 
 /* Private variables ---------------------------------------------------------*/
+static QueueHandle_t xUartQueue;
+//static StaticQueue_t xStaticQueue;
+//static uint8_t ucQueueStorageArea[ UART_QUEUE_LENGTH * UART_LINE_LENGTH ];
 static volatile int dma_complete = 0;
 static int counter = 0;
-static char uart_buffer[40];
+static int8_t ucUartTxBuffer[ UART_LINE_LENGTH ];
+static int8_t ucUartTxBuffer2[ UART_LINE_LENGTH ];
 
 /* Private function prototypes -----------------------------------------------*/
 static void MX_NVIC_Init(void);
@@ -159,27 +165,47 @@ void HAL_UART_TxCpltCallback (UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief  UART transmit thread.  Infinite loop to continuously transmit sequential numbers on the UART.
+  * @brief  UART transmit thread.  Pulls items from the UART queue and DMA transmits them on teh UART.
   * @param arg: pointer on argument (not used here)
   * @retval None
   */
 static void uart_tx_thread(void *arg)
 {
   dma_complete = 0;
-
   HAL_UART_Transmit_DMA( &huart3, (uint8_t *) &"Booted.\r\n", 9 );
 
   while(1)
   {
-	  vTaskDelay(10);
-
 	  if (dma_complete == 1)
 	  {
-		  dma_complete = 0;
-		  counter++;
-		  sprintf( uart_buffer, "rtos: %d\r\n", counter );
-		  HAL_UART_Transmit_DMA( &huart3, (uint8_t*) uart_buffer, strlen(uart_buffer) );
+		  BaseType_t ok = xQueueReceive(xUartQueue, ucUartTxBuffer, portMAX_DELAY);
+		  if ( ok )
+		  {
+			  dma_complete = 0;
+			  HAL_UART_Transmit_DMA( &huart3, (uint8_t *) ucUartTxBuffer, strlen((char *) ucUartTxBuffer) );
+		  }
 	  }
+	  else
+	  {
+		  vTaskDelay(1);
+	  }
+  }
+}
+
+/**
+  * @brief  UART stuff transmit queue thread.  Infinite loop to continuously transmit sequential numbers on the UART.
+  * @param arg: pointer on argument (not used here)
+  * @retval None
+  */
+static void uart_stuff_tx_thread(void *arg)
+{
+  while(1)
+  {
+	  vTaskDelay(100);
+
+	  counter++;
+	  sprintf( (char *) ucUartTxBuffer2, "TX: %d\r\n", counter );
+	  uart_send( ucUartTxBuffer2 );
   }
 }
 
@@ -190,22 +216,44 @@ static void uart_tx_thread(void *arg)
   *
   * @retval None
   */
-void uart_if_init(void)
+void uart_init(void)
 {
+  /* initialize hardware */
   MX_GPIO_Init();
   MX_DMA_Init();
   MX_USART3_UART_Init();
 
   /* Initialize interrupts */
   MX_NVIC_Init();
-  /* USER CODE BEGIN 2 */
 
+  /* Create a UART TX Queue */
+//  xUartQueue = xQueueCreateStatic( UART_QUEUE_LENGTH,
+//		  UART_LINE_LENGTH,
+//		  ucQueueStorageArea,
+//          &xStaticQueue );
+
+  xUartQueue = xQueueCreate( UART_QUEUE_LENGTH, UART_LINE_LENGTH);
+
+  /* turn on green LED */
   HAL_GPIO_WritePin(GPIOB, GRN_LED_Pin, GPIO_PIN_SET);
 
+  /* start the UART thread */
   dma_complete = 1;
-
   sys_thread_new("UART_TX", uart_tx_thread, NULL, DEFAULT_THREAD_STACKSIZE, UART_TX_THREAD_PRIO);
+  sys_thread_new("STUFFER", uart_stuff_tx_thread, NULL, DEFAULT_THREAD_STACKSIZE, UART_TX_THREAD_PRIO);
 
+}
+
+/**
+  * @brief  Adds a line of text to the UART queu to be transmitted by the UART_TX thread.
+  *
+  * @param  line: the line of text to be sent. Should include "/r/n" and terminating zero.
+  * @retval TRUE if the item was successfully queued, otherwise FALSE
+  */
+BaseType_t uart_send(int8_t line[])
+{
+	BaseType_t ok = xQueueSend(xUartQueue, (const void *) line, UNQUEUE_TICKS_TO_WAIT );
+	return (ok == pdTRUE);
 }
 
 

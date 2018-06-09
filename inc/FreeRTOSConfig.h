@@ -116,6 +116,9 @@
 #define configGENERATE_RUN_TIME_STATS	        0
 #define configUSE_STATS_FORMATTING_FUNCTIONS    1
 
+/* Defined for UART Queue */
+//#define configSUPPORT_STATIC_ALLOCATION		1
+
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		        0
 #define configMAX_CO_ROUTINE_PRIORITIES        ( 2 )

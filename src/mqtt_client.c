@@ -185,7 +185,7 @@ static void example_publish(mqtt_client_t *client, void *arg)
   char pub_payload[40];
 
   nPubCounter++;
-  sprintf(pub_payload, "PubData: 0x%X", nPubCounter);
+  sprintf(pub_payload, "PubData: 0x%X", (unsigned int) nPubCounter);
   //const char *pub_payload= "PubTestData";
 
   err_t err;

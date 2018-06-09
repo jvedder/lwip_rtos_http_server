@@ -26,8 +26,8 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
+#include <uart.h>
 #include "main.h"
-#include "uart_if.h"
 #include "stm32f4xx_it.h"
 
 /* Private typedef -----------------------------------------------------------*/
