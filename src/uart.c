@@ -57,10 +57,11 @@ static QueueHandle_t xUartQueue;
 //static StaticQueue_t xStaticQueue;
 //static uint8_t ucQueueStorageArea[ UART_QUEUE_LENGTH * UART_LINE_LENGTH ];
 static volatile int dma_complete = 0;
-static int counter = 0;
-static int8_t ucUartTxBuffer[ UART_LINE_LENGTH ];
-static int8_t ucUartStuffBuffer[ UART_LINE_LENGTH ];
-static int8_t ucUartTempBuffer[ UART_LINE_LENGTH ];
+static uint32_t counter = 0;
+
+static char ucUartTxBuffer[ UART_LINE_LENGTH ];
+static char ucUartStuffBuffer[ UART_LINE_LENGTH ];
+static char ucUartTempBuffer[ UART_LINE_LENGTH ];
 
 /* Private function prototypes -----------------------------------------------*/
 static void MX_NVIC_Init(void);
@@ -166,7 +167,7 @@ void HAL_UART_TxCpltCallback (UART_HandleTypeDef *huart)
 }
 
 /**
-  * @brief  UART transmit thread.  Pulls items from the UART queue and DMA transmits them on teh UART.
+  * @brief  UART transmit thread.  Pulls items from the UART queue and DMA transmits them on the UART.
   * @param arg: pointer on argument (not used here)
   * @retval None
   */
@@ -183,7 +184,7 @@ static void uart_tx_thread(void *arg)
 		  if ( ok )
 		  {
 			  dma_complete = 0;
-			  HAL_UART_Transmit_DMA( &huart3, (uint8_t *) ucUartTxBuffer, strlen((char *) ucUartTxBuffer) );
+			  HAL_UART_Transmit_DMA( &huart3, (uint8_t *) ucUartTxBuffer, strlen(ucUartTxBuffer) );
 		  }
 	  }
 	  else
@@ -198,14 +199,16 @@ static void uart_tx_thread(void *arg)
   * @param arg: pointer on argument (not used here)
   * @retval None
   */
-static void uart_stuff_tx_thread(void *arg)
+static void uart_stuffer_thread(void *arg)
 {
   while(1)
   {
+
 	  vTaskDelay(1000);
 
 	  counter++;
-	  sprintf( (char *) ucUartStuffBuffer, "Stuff: %d", counter );
+	  sprintf( ucUartStuffBuffer, "Stuff: %ld", counter );
+
 	  uart_send( ucUartStuffBuffer );
   }
 }
@@ -241,7 +244,7 @@ void uart_init(void)
   /* start the UART thread */
   dma_complete = 1;
   sys_thread_new("UART_TX", uart_tx_thread, NULL, DEFAULT_THREAD_STACKSIZE, UART_TX_THREAD_PRIO);
-  sys_thread_new("STUFFER", uart_stuff_tx_thread, NULL, DEFAULT_THREAD_STACKSIZE, UART_TX_THREAD_PRIO);
+  sys_thread_new("STUFFER", uart_stuffer_thread, NULL, DEFAULT_THREAD_STACKSIZE, UART_TX_THREAD_PRIO);
 
 }
 
@@ -252,7 +255,7 @@ void uart_init(void)
   * @param  line: the line of text to be sent. Should include "/r/n" and terminating zero.
   * @retval TRUE if the item was successfully queued, otherwise FALSE
   */
-BaseType_t uart_send(int8_t line[])
+BaseType_t uart_send(char *line)
 {
 	//TODO: Find a cleaner way to handle short lines than copying into a temp buffer
 	int i;

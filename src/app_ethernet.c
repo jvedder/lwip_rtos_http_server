@@ -71,7 +71,7 @@ void User_notification(struct netif *netif)
 #ifdef USE_DHCP
     /* Update DHCP state machine */
     DHCP_state = DHCP_START;
-    uart_send((int8_t *)&"DHCP_START");
+    uart_send(&"DHCP_START");
 #endif /* USE_DHCP */
   }
   else
@@ -79,7 +79,7 @@ void User_notification(struct netif *netif)
 #ifdef USE_DHCP
     /* Update DHCP state machine */
     DHCP_state = DHCP_LINK_DOWN;
-    uart_send((int8_t *)&"DHCP_LINK_DOWN");
+    uart_send(&"DHCP_LINK_DOWN");
 #endif  /* USE_DHCP */
   } 
 }
@@ -109,7 +109,7 @@ void DHCP_thread(void const * argument)
         ip_addr_set_zero_ip4(&netif->gw);       
         dhcp_start(netif);
         DHCP_state = DHCP_WAIT_ADDRESS;
-        uart_send((int8_t *)&"DHCP_WAIT_ADDRESS");
+        uart_send(&"DHCP_WAIT_ADDRESS");
       }
       break;
       
@@ -118,7 +118,7 @@ void DHCP_thread(void const * argument)
         if (dhcp_supplied_address(netif)) 
         {
           DHCP_state = DHCP_ADDRESS_ASSIGNED;
-          uart_send((int8_t *)&"DHCP_ADDRESS_ASSIGNED");
+          uart_send(&"DHCP_ADDRESS_ASSIGNED");
         }
         else
         {
@@ -128,7 +128,7 @@ void DHCP_thread(void const * argument)
           if (dhcp->tries > MAX_DHCP_TRIES)
           {
             DHCP_state = DHCP_TIMEOUT;
-            uart_send((int8_t *)&"DHCP_TIMEOUT");
+            uart_send(&"DHCP_TIMEOUT");
             
             /* Stop DHCP */
             dhcp_stop(netif);

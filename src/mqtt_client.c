@@ -76,7 +76,7 @@ static void example_connect(mqtt_client_t *client)
      to establish a connection with the server.
      For now MQTT version 3.1.1 is always used */
 
-  uart_send((int8_t *)&"MQTT_CONNECTING");
+  uart_send(&"MQTT_CONNECTING");
 
   err = mqtt_client_connect(client, &mqtt_server_ip_addr, MQTT_PORT, mqtt_connection_cb, NULL, &ci);
 
@@ -94,7 +94,7 @@ static void mqtt_connection_cb(mqtt_client_t *client, void *arg, mqtt_connection
   err_t err;
   if(status == MQTT_CONNECT_ACCEPTED) {
     printf("mqtt_connection_cb: Successfully connected\n");
-    uart_send((int8_t *)&"MQTT_CONNECTED");
+    uart_send(&"MQTT_CONNECTED");
 
     /* Setup callback for incoming publish requests */
     mqtt_set_inpub_callback(client, mqtt_incoming_publish_cb, mqtt_incoming_data_cb, arg);

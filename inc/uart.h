@@ -71,7 +71,8 @@
 
 /* Exported functions ------------------------------------------------------- */
 void uart_init(void);
-BaseType_t uart_send(int8_t line[]);
+BaseType_t uart_send(char *line);
+
 
 
 #endif
