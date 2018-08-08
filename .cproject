@@ -4,7 +4,7 @@
 		<cconfiguration id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1536882161">
 			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="fr.ac6.managedbuild.config.gnu.cross.exe.debug.1536882161" moduleId="org.eclipse.cdt.core.settings" name="Debug">
 				<macros>
-					<stringMacro name="LibraryDirPath" type="VALUE_TEXT" value="${WorkspaceDirPath}/STM32Cube_FW_F4_V1.19.0"/>
+					<stringMacro name="LibraryDirPath" type="VALUE_TEXT" value="${WorkspaceDirPath}/STM32Cube_FW_F4"/>
 				</macros>
 				<externalSettings/>
 				<extensions>
